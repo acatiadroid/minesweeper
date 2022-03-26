@@ -1,5 +1,9 @@
 from tkinter import *
 import random
+import platform
+from tkinter import messagebox
+
+from .config import read, write
 
 class Window(Tk):
     def __init__(self):
@@ -7,7 +11,7 @@ class Window(Tk):
 
         self.grid()
         self.wm_title("Minesweeper")
-        
+        self.iconbitmap("Assets/_flag.ico")
         self.assets = {
             "mine": PhotoImage(file="Assets/mine.png"),
             "fd": PhotoImage(file="Assets/facingDown.png"),
@@ -18,10 +22,24 @@ class Window(Tk):
 
         self.button_data = {}
         
-        self.X = 10
-        self.Y = 10
+        self.X = 25
+        self.Y = 25
         
+        self.btn_click = "<Button-1>"
+        self.btn_flag = "<Button-2>" if platform.system() == "Darwin" else "<Button-3>"
+
+        self.game_ended = False
+
         self.setup()
+
+        # -- menu bar setup --
+        self.menu = Menu(self)
+        gamemenu = Menu(self.menu, tearoff=0)
+        gamemenu.add_command(label="Easy (9x9 - 81 tiles)")
+        gamemenu.add_command(label="Medium (16x16 - 256 tiles)")
+        gamemenu.add_command(label="Hard (25x25 - 625 tiles)")
+        self.menu.add_cascade(label="Difficulty", menu=gamemenu)
+        self.configure(menu=self.menu)
 
     
     def _run(self):
@@ -109,31 +127,69 @@ class Window(Tk):
             for y in range(self.Y):
                 randnum = random.randint(0, 100)
 
-                if randnum <= 10:
+                if randnum <= 7:
                     isMine = True
                 else:
                     isMine = False
+                xy_coords = f"{x}_{y}"
 
-                btn = Button(self, image=self.assets["fd"], borderwidth=0)
-                btn.grid(row=x, column=y)
-
-                self.button_data[f"{x}_{y}"] = {
+                self.button_data[xy_coords] = {
                     "isMine": isMine,
-                    "button": btn,
+                    "button": Button(self, image=self.assets["fd"], borderwidth=0, command=lambda xy_coords=xy_coords: self.reveal_tile(coords=xy_coords)),
                     "pos_x": x,
-                    "pos_y": y
+                    "pos_y": y,
+                    "flagged": False
                 }
-        
-        for i in self.button_data:
-            if self.button_data[i]["isMine"]:
-                self.button_data[i]["button"].configure(image=self.assets["mine"])
-            else:
-                for k, v in self.button_data.items():
-                    if v["isMine"]:
-                        continue
-                    val = self.mine_value(k)
-                    print(val)
-                    v["button"].configure(image=self.assets[val])
-                    
+                self.button_data[xy_coords]["button"].grid(row=x, column=y)
+                self.button_data[xy_coords]["button"].bind(self.btn_flag, lambda event, coords=xy_coords: self.flag_tile(event, coords))
 
-Window()._run()
+    def reveal_tile(self, coords):
+        """Reveals the tile when it's been clicked on."""
+        if self.game_ended:
+            return
+        if self.button_data[coords]["isMine"] == True: # It's a mine. kaboom
+            self.button_data[coords]["button"].configure(image=self.assets["mine"])
+            self.stop_game()
+            return
+
+        count = self.mine_value(coords)
+
+        self.button_data[coords]["button"].configure(image=self.assets[count])
+    
+    def stop_game(self):
+        """
+        Stops the game either because a mine has
+        been detonated, or they manually ended the 
+        game.
+        """
+        # TODO: Stop timer
+        self.game_ended = True
+        messagebox.showwarning(
+            title="Game Over",
+            message="Oh no! You detonated a mine. Game over!"
+        )
+        self.reveal_mines()
+        self.game_ended = False
+        self.restart()
+    
+    def reveal_mines(self):
+        """Shows all tiles once the game has ended."""
+        for tile in self.button_data:
+            if self.button_data[tile]["isMine"]:
+                self.button_data[tile]["button"].configure(image=self.assets["mine"])
+    
+    def flag_tile(self, event, coords):
+        """
+        Called when a tile is right-clicked.
+        This will put the flag icon on the tile.
+        """
+        print(coords)
+
+        self.button_data[coords]["flagged"] = True
+        self.button_data[coords]["button"].configure(image=self.assets["flagged"])
+
+    def restart(self):
+        for child in self.grid_slaves():
+            child.grid_forget()
+        
+        self.setup()
