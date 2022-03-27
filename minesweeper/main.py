@@ -22,25 +22,22 @@ class Window(Tk):
 
         self.button_data = {}
         
-        self.X = 25
-        self.Y = 25
+        self.X = 10
+        self.Y = 10
         
         self.btn_click = "<Button-1>"
         self.btn_flag = "<Button-2>" if platform.system() == "Darwin" else "<Button-3>"
 
         self.game_ended = False
 
+        self.restart_button = Button(
+            self,
+            text="Restart",
+            command=self.restart
+        )
+        self.restart_button.grid(row=0, column=0, columnspan=self.X, sticky="nwse")
+
         self.setup()
-
-        # -- menu bar setup --
-        self.menu = Menu(self)
-        gamemenu = Menu(self.menu, tearoff=0)
-        gamemenu.add_command(label="Easy (9x9 - 81 tiles)")
-        gamemenu.add_command(label="Medium (16x16 - 256 tiles)")
-        gamemenu.add_command(label="Hard (25x25 - 625 tiles)")
-        self.menu.add_cascade(label="Difficulty", menu=gamemenu)
-        self.configure(menu=self.menu)
-
     
     def _run(self):
         """
@@ -183,13 +180,16 @@ class Window(Tk):
         Called when a tile is right-clicked.
         This will put the flag icon on the tile.
         """
-        print(coords)
-
-        self.button_data[coords]["flagged"] = True
-        self.button_data[coords]["button"].configure(image=self.assets["flagged"])
+        if self.button_data[coords]["flagged"] == True:
+            self.button_data[coords]["flagged"] = False
+            self.button_data[coords]["button"].configure(image=self.assets["fd"])
+        else:
+            self.button_data[coords]["flagged"] = True
+            self.button_data[coords]["button"].configure(image=self.assets["flagged"])
 
     def restart(self):
-        for child in self.grid_slaves():
-            child.grid_forget()
-        
+        for button in self.button_data:
+            self.button_data[button]["button"].forget()
+            
+        self.button_data.clear()
         self.setup()
