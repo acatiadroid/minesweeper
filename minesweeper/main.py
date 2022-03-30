@@ -120,6 +120,8 @@ class Window(Tk):
         than 50x50 (2,500 tiles total) to prevent
         crashing it.
         """
+        self.game_ended = False
+
         for x in range(self.X):
             for y in range(self.Y):
                 randnum = random.randint(0, 100)
@@ -128,16 +130,16 @@ class Window(Tk):
                     isMine = True
                 else:
                     isMine = False
-                xy_coords = f"{x}_{y}"
+                xy_coords = f"{x+1}_{y}"
 
                 self.button_data[xy_coords] = {
                     "isMine": isMine,
                     "button": Button(self, image=self.assets["fd"], borderwidth=0, command=lambda xy_coords=xy_coords: self.reveal_tile(coords=xy_coords)),
-                    "pos_x": x,
+                    "pos_x": x+1,
                     "pos_y": y,
                     "flagged": False
                 }
-                self.button_data[xy_coords]["button"].grid(row=x, column=y)
+                self.button_data[xy_coords]["button"].grid(row=x+1, column=y)
                 self.button_data[xy_coords]["button"].bind(self.btn_flag, lambda event, coords=xy_coords: self.flag_tile(event, coords))
 
     def reveal_tile(self, coords):
@@ -166,8 +168,6 @@ class Window(Tk):
             message="Oh no! You detonated a mine. Game over!"
         )
         self.reveal_mines()
-        self.game_ended = False
-        self.restart()
     
     def reveal_mines(self):
         """Shows all tiles once the game has ended."""
@@ -186,10 +186,10 @@ class Window(Tk):
         else:
             self.button_data[coords]["flagged"] = True
             self.button_data[coords]["button"].configure(image=self.assets["flagged"])
-
+    
     def restart(self):
         for button in self.button_data:
             self.button_data[button]["button"].forget()
-            
+
         self.button_data.clear()
         self.setup()
