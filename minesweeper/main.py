@@ -66,48 +66,22 @@ class Window(Tk):
         x = int(val2[0])
         y = int(val2[1])
 
-        board = self.button_data
-
-        try: # Too lazy to use a loop so only 1 try-except will be needed but this will do for now
-            if board[f"{x}_{y+1}"]["isMine"] == True: # Above middle
-                count += 1
-        except KeyError:
-            pass
-        try:
-            if board[f"{x-1}_{y+1}"]["isMine"] == True:  # Above left
-                count += 1
-        except KeyError:
-            pass
-        try:
-            if board[f"{x+1}_{y+1}"]["isMine"] == True:  # Above right
-                count += 1
-        except KeyError:
-            pass
-        try:
-            if board[f"{x-1}_{y}"]["isMine"] == True:  # Middle left
-                count += 1
-        except KeyError:
-            pass
-        try:
-            if board[f"{x+1}_{y}"]["isMine"] == True:  # Middle right
-                count += 1
-        except KeyError:
-            pass
-        try:
-            if board[f"{x-1}_{y-1}"]["isMine"] == True:  # Bottom left
-                count += 1
-        except KeyError:
-            pass
-        try:
-            if board[f"{x}_{y-1}"]["isMine"] == True:  # Bottom middle
-                count += 1
-        except KeyError:
-            pass
-        try:
-            if board[f"{x+1}_{y-1}"]["isMine"] == True:  # Bottom right
-                count += 1
-        except KeyError:
-            pass
+        neighbours = {
+            "top_left": f"{x-1}_{y+1}",
+            "top_middle": f"{x}_{y+1}",
+            "top_right": f"{x+1}_{y+1}",
+            "left": f"{x-1}_{y}",
+            "right": f"{x+1}_{y}",
+            "bottom_left": f"{x-1}_{y-1}",
+            "bottom_middle": f"{x}_{y-1}",
+            "bottom_right": f"{x+1}_{y-1}"
+        }
+        for coords in neighbours:
+            try:
+                if self.button_data[neighbours[coords]]["isMine"] == True:
+                    count += 1
+            except KeyError:
+                continue
 
         return count
 
@@ -188,6 +162,7 @@ class Window(Tk):
             self.button_data[coords]["button"].configure(image=self.assets["flagged"])
     
     def restart(self):
+        """Clears the board and clears button data."""
         for button in self.button_data:
             self.button_data[button]["button"].forget()
 
