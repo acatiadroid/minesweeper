@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title>How it works</title>
+        <link rel="stylesheet" href="styles/style.css">
+    </head>
+
+    <body style="overflow-y:scroll;">
+        <ul>
+            <li style="float:left;"><a href="index.html">Minesweeper</a></li>
+            <li><a href="howtoplay.html">How to play</a></li>
+            <li><a href="howitworks.html">How it works</a></li>
+            <li><a href="index.html">Home page</a></li>
+        </ul>
+
+        <div class="main-body-hiw">
+            <h1>How it works</h1>
+            <br>
+            <h2>Generating the board</h2>
+            <p>
+                The game must generate a board every time the game runs. The game does this by<br>
+                using 2 <code class="codeblock">for</code> loops to generate a button with an X and Y axis. See:
+            </p>
+            <br>
+            <img src="https://acatia.wants-to.party/NWRENGluBq.png">
+            <br>
+            <br>
+            <p>The <code class="codeblock">self.button_data</code> dictionary will be essential throughout the rest of the program.</p>
+            <br>
+            <br>
+            <h2>On tile click</h2>
+            <p>When the tile is clicked, the <code class="codeblock">reveal_tile()</code> function is called, as seen below:</p>
+            <br>
+            <img src="https://acatia.wants-to.party/sg4T3mNRSy.png">
+            <br>
+            <br>
+            <h2>Restart button is pressed</h2>
+            <p>The restart button is binded to the <code class="codeblock">restart()</code> function. When it's pressed, the<br>
+            previous game data is cleared and it creates a new board. See:</p>
+            <br>
+            <img src="https://acatia.wants-to.party/ix7EcrTEGf.png">
+            <br>
+            <br>
+            <br>
+            <h2><i>This is unfinished. More will be added soon.</i></h2>
+        </div>
+    </body>
+</html>

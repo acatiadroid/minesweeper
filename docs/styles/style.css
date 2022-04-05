@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+body {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    word-wrap: normal;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(44, 44, 44);
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+  
+  li {
+    float: right;
+  }
+  
+  li a {
+    display: block;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  li a:hover {
+    background-color: #1d1d1d;
+  }
+
+.main-body {
+  padding:20px;
+  margin-top:30px;
+  background-color:#1d1d1d;
+  height:100%;
+  width: 100%;
+  color: white;
+  font-family: 'Source Code Pro', monospace;
+  font-weight: 400;
+  text-align: center;
+}
+
+.main-body-hiw {
+  padding: 20px;
+  margin-top: 30px;
+  background-color: #1d1d1d;
+  height: auto;
+  width: 100%;
+  color: white;
+  font-family: 'Source Code Pro', monospace;
+  font-weight: 400;
+  text-align: center;
+}
+
+.main-text {
+  word-wrap: normal;
+  margin: 0 auto;
+}
+
+h1, h3 {
+  font-weight: 200;
+}
+
+.hl {
+  text-decoration: none;
+  color: #8f7fdf;
+
+}
+
+.codeblock {
+  background-color: black;
+  color: darksalmon;
+  font-size: 16px;
+}
